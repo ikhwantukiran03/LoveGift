@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy National Girlfriend Day</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #ffe6f2, #fbeaff);
+    overflow: hidden;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+  }
+
+  .flowers-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+  }
+
+  .flower {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    animation: spin 20s linear infinite;
+  }
+
+  .petal {
+    position: absolute;
+    width: 12px;
+    height: 24px;
+    background: red;
+    border-radius: 50% 50% 0 0;
+    transform-origin: bottom center;
+  }
+
+  .center {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 24px;
+    height: 24px;
+    background: radial-gradient(circle, gold, orange);
+    border-radius: 50%;
+    z-index: 2;
+    box-shadow: 0 0 4px orange;
+  }
+
+  .petal:nth-child(1) { transform: rotate(0deg) translateY(-12px); }
+  .petal:nth-child(2) { transform: rotate(36deg) translateY(-12px); }
+  .petal:nth-child(3) { transform: rotate(72deg) translateY(-12px); }
+  .petal:nth-child(4) { transform: rotate(108deg) translateY(-12px); }
+  .petal:nth-child(5) { transform: rotate(144deg) translateY(-12px); }
+  .petal:nth-child(6) { transform: rotate(180deg) translateY(-12px); }
+  .petal:nth-child(7) { transform: rotate(216deg) translateY(-12px); }
+  .petal:nth-child(8) { transform: rotate(252deg) translateY(-12px); }
+  .petal:nth-child(9) { transform: rotate(288deg) translateY(-12px); }
+  .petal:nth-child(10) { transform: rotate(324deg) translateY(-12px); }
+
+  .greeting {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    font-size: 24px;
+    color: #d63384;
+    text-shadow: 1px 1px 3px #fff;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(3px);
+    padding: 8px;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+  }
+
+  .falling {
+    position: fixed;
+    top: -30px;
+    width: 15px;
+    height: 15px;
+    background: pink;
+    border-radius: 50%;
+    opacity: 0.7;
+    animation: fall linear infinite;
+  }
+
+  @keyframes fall {
+    to {
+      transform: translateY(110vh) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  #playBtn {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    font-size: 16px;
+    padding: 8px 12px;
+    background-color: #ff66b2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    z-index: 10;
+  }
+</style>
+</head>
+<body>
+
+<audio id="bgMusic" loop>
+  <source src="love.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+<button id="playBtn">Play Music</button>
+
+<div class="flowers-container" id="flowers"></div>
+<div class="greeting">Happy National Girlfriend Day</div>
+
+<script>
+  // Arrange flowers in a heart shape
+  const flowerContainer = document.getElementById('flowers');
+  const heartPoints = [];
+  const scale = 8; // adjust heart size
+  for (let t = 0; t < Math.PI * 2; t += 0.1) {
+    const x = 16 * Math.pow(Math.sin(t), 3);
+    const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+    heartPoints.push({x: x * scale, y: y * scale});
+  }
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+
+  heartPoints.forEach((point, index) => {
+    const flower = document.createElement('div');
+    flower.className = 'flower';
+    flower.style.left = (centerX + point.x - 20) + 'px';
+    flower.style.top = (centerY + point.y - 20) + 'px';
+
+    // color variation
+    const colors = [
+      '#ff4d4d', '#ff66b2', '#ff9966', '#66cc66', '#6699ff', '#9966cc'
+    ];
+    const color = colors[index % colors.length];
+
+    for (let j = 0; j < 10; j++) {
+      const petal = document.createElement('div');
+      petal.className = 'petal';
+      petal.style.background = color;
+      flower.appendChild(petal);
+    }
+    const center = document.createElement('div');
+    center.className = 'center';
+    flower.appendChild(center);
+
+    flowerContainer.appendChild(flower);
+  });
+
+  // Falling petals
+  function createFallingPetal() {
+    const petal = document.createElement('div');
+    petal.className = 'falling';
+    petal.style.left = Math.random() * 100 + 'vw';
+    petal.style.animationDuration = (4 + Math.random() * 4) + 's';
+    petal.style.background = Math.random() > 0.5 ? 'pink' : 'hotpink';
+    document.body.appendChild(petal);
+    setTimeout(() => petal.remove(), 8000);
+  }
+  setInterval(createFallingPetal, 300);
+
+  // Music play/pause
+  document.getElementById('playBtn').addEventListener('click', function() {
+    const music = document.getElementById('bgMusic');
+    if (music.paused) {
+      music.play();
+      this.textContent = 'Pause Music';
+    } else {
+      music.pause();
+      this.textContent = 'Play Music';
+    }
+  });
+</script>
+</body>
+</html>
+
+
+
